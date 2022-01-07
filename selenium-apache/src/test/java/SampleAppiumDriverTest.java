@@ -33,11 +33,9 @@ public class SampleAppiumDriverTest {
             MutableCapabilities caps = new MutableCapabilities();
             caps.setCapability("platformName", "iOS");
             caps.setCapability("browserName", "Safari");
-            caps.setCapability("appium:deviceName", "iPhone 13 Simulator");
-            caps.setCapability("appium:platformVersion", "15.0");
-            MutableCapabilities sauceOptions = new MutableCapabilities();
-            sauceOptions.setCapability("appiumVersion", "1.22.0");
-            caps.setCapability("sauce:options", sauceOptions);
+            caps.setCapability("deviceName", "iPhone 13 Simulator");
+            caps.setCapability("platformVersion", "15.0");
+            caps.setCapability("appiumVersion", "1.22.0");
 
             AppiumDriver driver = new AppiumDriver(new URL(SAUCE_URL), caps);
 

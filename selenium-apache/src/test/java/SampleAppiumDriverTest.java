@@ -1,4 +1,7 @@
-import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.MobileBy;
+import io.appium.java_client.MobileElement;
+import io.appium.java_client.TouchAction;
+import io.appium.java_client.ios.IOSDriver;
 import org.junit.Test;
 import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.WebElement;
@@ -32,17 +35,22 @@ public class SampleAppiumDriverTest {
 
             MutableCapabilities caps = new MutableCapabilities();
             caps.setCapability("platformName", "iOS");
-            caps.setCapability("browserName", "Safari");
+            //TODO: Change to your Sauce Storage ID
+            caps.setCapability("app", "storage:81438268-f41e-429c-bcb4-c8f0047c13e7");
             caps.setCapability("deviceName", "iPhone 13 Simulator");
             caps.setCapability("platformVersion", "15.0");
             caps.setCapability("appiumVersion", "1.22.0");
 
-            AppiumDriver driver = new AppiumDriver(new URL(SAUCE_URL), caps);
+            IOSDriver<MobileElement> driver = new IOSDriver<MobileElement>(new URL(SAUCE_URL), caps);
 
-            driver.get("https://saucedemo.com");
 
-            WebElement user = driver.findElementById("user-name");
+            WebElement user = driver.findElement(MobileBy.AccessibilityId("test-Username"));
             user.sendKeys("test-user");
+
+            MobileElement loginBtn = (MobileElement) driver.findElement(MobileBy.AccessibilityId("test-LOGIN"));
+
+            TouchAction action = new TouchAction(driver);
+            action.tap(loginBtn).perform();
 
             driver.getPageSource();
 

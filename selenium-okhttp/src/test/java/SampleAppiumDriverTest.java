@@ -1,16 +1,17 @@
-import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.MobileBy;
+import io.appium.java_client.MobileCommand;
+import io.appium.java_client.MobileElement;
+import io.appium.java_client.TouchAction;
+import io.appium.java_client.ios.IOSDriver;
+import io.appium.java_client.remote.AppiumCommandExecutor;
+import io.appium.java_client.touch.TapOptions;
+import io.appium.java_client.touch.offset.ElementOption;
 import org.junit.Test;
 import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.remote.HttpCommandExecutor;
-import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 
 public class SampleAppiumDriverTest {
@@ -34,23 +35,31 @@ public class SampleAppiumDriverTest {
 
 
             HTTPFactory factory = new HTTPFactory();
-            HttpCommandExecutor executor = new HttpCommandExecutor(Collections.emptyMap(), new URL(SAUCE_URL), factory);
+            AppiumCommandExecutor executor = new AppiumCommandExecutor(MobileCommand.commandRepository, new URL(SAUCE_URL), factory);
 
             MutableCapabilities caps = new MutableCapabilities();
             caps.setCapability("platformName", "iOS");
-            caps.setCapability("browserName", "Safari");
+            //TODO: Change to your Sauce Storage ID
+            caps.setCapability("appium:app", "storage:81438268-f41e-429c-bcb4-c8f0047c13e7");
             caps.setCapability("appium:deviceName", "iPhone 13 Simulator");
             caps.setCapability("appium:platformVersion", "15.0");
             MutableCapabilities sauceOptions = new MutableCapabilities();
             sauceOptions.setCapability("appiumVersion", "1.22.0");
             caps.setCapability("sauce:options", sauceOptions);
 
-            AppiumDriver driver = new AppiumDriver(executor, caps);
+            IOSDriver driver = new IOSDriver<MobileElement>(executor, caps);
 
-            driver.get("https://saucedemo.com");
 
-            WebElement user = driver.findElementById("user-name");
+            WebElement user = driver.findElement(MobileBy.AccessibilityId("test-Username"));
             user.sendKeys("test-user");
+
+            MobileElement loginBtn = (MobileElement) driver.findElement(MobileBy.AccessibilityId("test-LOGIN"));
+
+            TapOptions tapOptions = new TapOptions();
+            tapOptions.withElement(ElementOption.element(loginBtn));
+
+            TouchAction action = new TouchAction(driver);
+            action.tap(tapOptions).perform();
 
             driver.getPageSource();
 
